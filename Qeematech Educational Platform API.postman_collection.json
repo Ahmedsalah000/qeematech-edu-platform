@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "16d9fbad-1b3f-4849-8ae9-483db1c75623",
+		"name": "Qeematech Educational Platform API",
+		"description": "API Collection for Qeematech Educational Platform - Task Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40589042",
+		"_collection_link": "https://iot-dashboard-api-2492.postman.co/workspace/QeemaTech~7c3ba384-c31b-4b7b-80d5-fd95d17b418d/collection/40589042-16d9fbad-1b3f-4849-8ae9-483db1c75623?action=share&source=collection_link&creator=40589042"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Get Schools List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/schools",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"schools"
+							]
+						},
+						"description": "Get list of available schools for registration"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get current logged in user info and type"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mohdamed Ali\",\n  \"email\": \"dds@test.com\",\n  \"password\": \"123456\",\n  \"phone\": \"+20 100 200 3000\",\n  \"class\": \"Grade 11\",\n  \"academicYear\": \"2024-2025\",\n  \"schoolId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register/student",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register",
+								"student"
+							]
+						},
+						"description": "Register a new student after Clerk authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"email\": \"dds@test.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login/student",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login",
+								"student"
+							]
+						},
+						"description": "Register a new student after Clerk authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"email\": \"admin@qeematech.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login",
+								"admin"
+							]
+						},
+						"description": "Register a new student after Clerk authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"email\": \"admin@qeematech.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Register a new student after Clerk authentication"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students (Admin)",
+			"item": [
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/students",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"students"
+							]
+						},
+						"description": "Get all students in the school (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/students/30001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"students",
+								"30001"
+							]
+						},
+						"description": "Get single student details (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New Student\",\n  \"email\": \"new@test.com\",\n  \"password\": \"123456\",\n  \"class\": \"Grade 9\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/students",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"students"
+							]
+						},
+						"description": "Create a new student (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Student Name\",\n  \"phone\": \"+20 999 888 7777\",\n  \"class\": \"Grade 11\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/students/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						},
+						"description": "Update student details (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Student",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/students/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						},
+						"description": "Delete a student (Admin only)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lessons",
+			"item": [
+				{
+					"name": "Get All Lessons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/lessons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"lessons"
+							]
+						},
+						"description": "Get all lessons (Students & Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lesson by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/lessons/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"lessons",
+								"1"
+							]
+						},
+						"description": "Get single lesson details"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Lesson",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"New Lesson\",\r\n  \"description\": \"Lesson description\",\r\n  \"rating\": 4.5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/lessons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"lessons"
+							]
+						},
+						"description": "Create a new lesson (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Lesson",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated Name\",\r\n  \"rating\": 4.9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/lessons/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"lessons",
+								"1"
+							]
+						},
+						"description": "Update lesson details (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Lesson",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/lessons/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"lessons",
+								"1"
+							]
+						},
+						"description": "Delete a lesson (Admin only)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Favorites (Student)",
+			"item": [
+				{
+					"name": "Get My Favorites",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/favorites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorites"
+							]
+						},
+						"description": "Get all favorite lessons for current student"
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Favorites",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favorites/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorites",
+								"2"
+							]
+						},
+						"description": "Add lesson to favorites (lessonId in URL)"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from Favorites",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favorites/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorites",
+								"2"
+							]
+						},
+						"description": "Remove lesson from favorites (lessonId in URL)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Get current user profile (Student or Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"ahmed salah\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/student",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"student"
+							]
+						},
+						"description": "Update student profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Update School Profile(Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"pyramids\",\r\n  \"address\": \"New giza\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/school",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"school"
+							]
+						},
+						"description": "Update school profile (Admin only)"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000/api"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
