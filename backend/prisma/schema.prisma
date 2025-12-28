@@ -1,0 +1,69 @@
+// Prisma Schema for Qeematech Educational Platform
+// Using MySQL database with JWT Authentication
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String   // Hashed password
+  phone     String?
+  address   String?
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+  lessons  Lesson[]
+}
+
+model Student {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  password     String     // Hashed password
+  phone        String?
+  profileImage String?
+  class        String?
+  academicYear String?
+  schoolId     Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  favorites Favorite[]
+}
+
+model Lesson {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?    @db.Text
+  image       String?
+  rating      Float      @default(0)
+  schoolId    Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  favorites Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  lessonId  Int
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, lessonId])
+}
