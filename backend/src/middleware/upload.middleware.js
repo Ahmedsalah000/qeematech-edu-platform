@@ -7,14 +7,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Define uploads directory (Use /tmp for Vercel as it's the only writable directory)
-const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
-const uploadsDir = isVercel
-    ? path.join('/tmp', 'uploads')
-    : path.join(__dirname, '../../uploads');
+let uploadsDir = path.join(__dirname, '../../uploads');
 
-// Ensure uploads directory exists
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+// Force /tmp on Vercel or production
+if (process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' || !!process.env.NOW_REGION) {
+    uploadsDir = path.join('/tmp', 'uploads');
+}
+
+// Ensure uploads directory exists with fallback
+try {
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+} catch (error) {
+    console.warn(`Falling back to /tmp/uploads due to error: ${error.message}`);
+    uploadsDir = path.join('/tmp', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 }
 
 // Configure storage

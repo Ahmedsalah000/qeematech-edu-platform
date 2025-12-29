@@ -22,8 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Parse cookies
 
-// Static files for uploads
-const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+// Static files for uploads (serving from /tmp on Vercel)
+const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production' || !!process.env.NOW_REGION;
 const uploadsPath = isVercel ? '/tmp/uploads' : 'uploads';
 app.use('/uploads', express.static(uploadsPath));
 
