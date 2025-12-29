@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
     getProfile,
     updateStudentProfile,
-    updateSchoolProfile
+    updateSchoolProfile,
+    changePassword
 } from '../controllers/profile.controller.js';
 import { requireAuth, requireStudent, requireAdmin } from '../middleware/auth.middleware.js';
 import { upload } from '../middleware/upload.middleware.js';
@@ -18,5 +19,8 @@ router.put('/student', requireAuth, requireStudent, upload.single('profileImage'
 
 // Update school profile (admin)
 router.put('/school', requireAuth, requireAdmin, upload.single('logo'), validate(updateSchoolProfileSchema), updateSchoolProfile);
+
+// Change Password
+router.post('/change-password', requireAuth, changePassword);
 
 export default router;

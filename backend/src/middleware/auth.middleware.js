@@ -9,8 +9,13 @@ export const cookieOptions = {
   httpOnly: true,
   secure: true, // Required for sameSite: 'none'
   sameSite: 'none', // Allow cross-site cookies
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (for refresh token)
   path: '/'
+};
+
+export const accessTokenOptions = {
+  ...cookieOptions,
+  maxAge: 15 * 60 * 1000 // 15 minutes
 };
 
 /**
@@ -132,8 +137,21 @@ export const requireAdminOrStudent = async (req, res, next) => {
 };
 
 /**
- * Generate JWT token
+ * Generate Access and Refresh token pair
  */
-export const generateToken = (id, type) => {
-  return jwt.sign({ id, type }, JWT_SECRET, { expiresIn: '7d' });
+export const generateTokens = (id, type) => {
+  const accessToken = jwt.sign({ id, type }, JWT_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ id, type }, JWT_SECRET, { expiresIn: '7d' });
+  return { accessToken, refreshToken };
+};
+
+/**
+ * Verify Refresh Token
+ */
+export const verifyRefreshToken = (token) => {
+  try {
+    return jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    return null;
+  }
 };

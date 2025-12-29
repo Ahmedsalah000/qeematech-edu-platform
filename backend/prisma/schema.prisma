@@ -21,9 +21,11 @@ model School {
   logo      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
 
   students Student[]
   lessons  Lesson[]
+  refreshTokens RefreshToken[]
 }
 
 model Student {
@@ -41,6 +43,7 @@ model Student {
 
   school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   favorites Favorite[]
+  refreshTokens RefreshToken[]
 }
 
 model Lesson {
@@ -67,4 +70,21 @@ model Favorite {
   lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, lessonId])
+}
+
+model RefreshToken {
+  id            Int      @id @default(autoincrement())
+  token         String   @unique @db.VarChar(500)
+  userId        Int
+  userType      String   // 'student' or 'admin'
+  expiresAt     DateTime
+  revoked       Boolean  @default(false)
+  replacedBy    String?  // The new token that replaced this one
+  createdAt     DateTime @default(now())
+
+  // Relations
+  student       Student? @relation(fields: [userId], references: [id], onDelete: Cascade, map: "student_token")
+  school        School?  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "school_token")
+
+  @@index([userId, userType])
 }

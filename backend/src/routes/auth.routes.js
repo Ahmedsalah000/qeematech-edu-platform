@@ -4,6 +4,8 @@ import {
     loginStudent,
     loginAdmin,
     logout,
+    logoutAll,
+    refresh,
     getMe,
     getSchools
 } from '../controllers/auth.controller.js';
@@ -17,9 +19,11 @@ router.get('/schools', getSchools);
 router.post('/register/student', validate(registerStudentSchema), registerStudent);
 router.post('/login/student', validate(loginSchema), loginStudent);
 router.post('/login/admin', validate(loginSchema), loginAdmin);
-router.post('/logout', logout);
+router.post('/refresh', refresh);
 
-// Protected route
+// Protected routes
+router.post('/logout', logout);
+router.post('/logout-all', requireAuth, logoutAll);
 router.get('/me', requireAuth, getMe);
 
 export default router;
