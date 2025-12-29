@@ -23,7 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Parse cookies
 
 // Static files for uploads
-app.use('/uploads', express.static('uploads'));
+const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+const uploadsPath = isVercel ? '/tmp/uploads' : 'uploads';
+app.use('/uploads', express.static(uploadsPath));
 
 // API Routes
 app.use('/api/auth', authRoutes);
