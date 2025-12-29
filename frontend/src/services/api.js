@@ -19,8 +19,8 @@ export const authAPI = {
     loginAdmin: (data) => api.post('/auth/login/admin', data),
     logout: () => api.post('/auth/logout'),
     logoutAll: () => api.post('/auth/logout-all'),
-    refresh: () => api.post('/auth/refresh', { _silent: true }), // Hint to interceptor
-    getMe: () => api.get('/auth/me', { _silent: true }), // Hint to interceptor
+    refresh: () => api.post('/auth/refresh'),
+    getMe: () => api.get('/auth/me'),
 }
 
 // Add Response Interceptor for Token Refresh
@@ -45,19 +45,10 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 // If refresh fails, session is dead
+                // You might want to trigger a logout here via window event or similar
                 window.dispatchEvent(new Event('auth-expired'));
-
-                // Silent catch for initial checks
-                if (originalRequest._silent) {
-                    return new Promise(() => { }); // Stop error propagation for silent requests
-                }
                 return Promise.reject(refreshError);
             }
-        }
-
-        // Silent catch for initial checks if they fail immediately (no token)
-        if (error.response?.status === 401 && originalRequest._silent) {
-            return new Promise(() => { });
         }
 
         return Promise.reject(error);
