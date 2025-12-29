@@ -4,11 +4,12 @@ import prisma from '../utils/prisma.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'qeematech-super-secret-key-2024';
 
 // Cookie options
+// Cookie options for production (Vercel supports cross-origin with sameSite: 'none')
 export const cookieOptions = {
-  httpOnly: true,        // Not accessible via JavaScript
-  secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-  sameSite: 'lax',       // CSRF protection
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+  httpOnly: true,
+  secure: true, // Required for sameSite: 'none'
+  sameSite: 'none', // Allow cross-site cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   path: '/'
 };
 
