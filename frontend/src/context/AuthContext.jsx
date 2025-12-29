@@ -20,6 +20,16 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on mount
     useEffect(() => {
         checkAuth()
+
+        // Listen for session expiration from API interceptor
+        const handleAuthExpired = () => {
+            setUser(null)
+            setUserType(null)
+            setIsAuthenticated(false)
+        }
+
+        window.addEventListener('auth-expired', handleAuthExpired)
+        return () => window.removeEventListener('auth-expired', handleAuthExpired)
     }, [])
 
     const checkAuth = async () => {
@@ -72,6 +82,17 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false)
     }
 
+    const logoutAll = async () => {
+        try {
+            await authAPI.logoutAll()
+        } catch (error) {
+            console.error('Logout All error:', error)
+        }
+        setUser(null)
+        setUserType(null)
+        setIsAuthenticated(false)
+    }
+
     const value = {
         user,
         userType,
@@ -81,6 +102,7 @@ export const AuthProvider = ({ children }) => {
         loginAdmin,
         registerStudent,
         logout,
+        logoutAll,
         checkAuth
     }
 

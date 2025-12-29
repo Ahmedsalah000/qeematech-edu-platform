@@ -18,8 +18,42 @@ export const authAPI = {
     loginStudent: (data) => api.post('/auth/login/student', data),
     loginAdmin: (data) => api.post('/auth/login/admin', data),
     logout: () => api.post('/auth/logout'),
+    logoutAll: () => api.post('/auth/logout-all'),
+    refresh: () => api.post('/auth/refresh'),
     getMe: () => api.get('/auth/me'),
 }
+
+// Add Response Interceptor for Token Refresh
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // If error is 401 and not already retried
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            // Avoid infinite loop if refresh itself fails
+            if (originalRequest.url === '/auth/refresh' || originalRequest.url === '/auth/login/student' || originalRequest.url === '/auth/login/admin') {
+                return Promise.reject(error);
+            }
+
+            originalRequest._retry = true;
+
+            try {
+                // Try to refresh token
+                await authAPI.refresh();
+                // If success, retry original request
+                return api(originalRequest);
+            } catch (refreshError) {
+                // If refresh fails, session is dead
+                // You might want to trigger a logout here via window event or similar
+                window.dispatchEvent(new Event('auth-expired'));
+                return Promise.reject(refreshError);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
 
 // Students API (Admin)
 export const studentsAPI = {
@@ -83,6 +117,7 @@ export const profileAPI = {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
     },
+    changePassword: (data) => api.post('/profile/change-password', data),
 }
 
 export default api
