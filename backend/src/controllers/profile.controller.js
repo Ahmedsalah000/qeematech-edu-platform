@@ -51,7 +51,7 @@ export const updateStudentProfile = async (req, res) => {
         if (phone) updateData.phone = phone;
         if (studentClass) updateData.class = studentClass;
         if (academicYear) updateData.academicYear = academicYear;
-        if (req.file) updateData.profileImage = `/uploads/${req.file.filename}`;
+        if (req.file) updateData.profileImage = req.file.path;
 
         const student = await prisma.student.update({
             where: { id: req.student.id },
@@ -77,7 +77,7 @@ export const updateSchoolProfile = async (req, res) => {
         if (name) updateData.name = name;
         if (phone) updateData.phone = phone;
         if (address) updateData.address = address;
-        if (req.file) updateData.logo = `/uploads/${req.file.filename}`;
+        if (req.file) updateData.logo = req.file.path;
 
         const school = await prisma.school.update({
             where: { id: req.school.id },

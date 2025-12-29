@@ -82,7 +82,7 @@ export const createLesson = async (req, res) => {
                 description,
                 rating: parseFloat(rating) || 0,
                 schoolId: req.school.id,
-                image: req.file ? `/uploads/${req.file.filename}` : null
+                image: req.file ? req.file.path : null
             }
         });
 
@@ -127,7 +127,7 @@ export const updateLesson = async (req, res) => {
         }
 
         if (req.file) {
-            updateData.image = `/uploads/${req.file.filename}`;
+            updateData.image = req.file.path;
         }
 
         const lesson = await prisma.lesson.update({

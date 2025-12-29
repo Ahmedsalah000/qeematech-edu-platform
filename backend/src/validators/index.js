@@ -222,6 +222,8 @@ export const validate = (schema) => {
                 message: detail.message
             }));
 
+            console.error('Validation Error details:', JSON.stringify(errors, null, 2));
+
             return res.status(400).json({
                 error: 'Validation failed',
                 details: errors

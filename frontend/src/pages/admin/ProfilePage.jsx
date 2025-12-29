@@ -8,6 +8,12 @@ import { School, Phone, MapPin, Camera } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'
 
+const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+}
+
 const ProfilePage = () => {
     const queryClient = useQueryClient()
     const [isEditing, setIsEditing] = useState(true)
@@ -77,7 +83,7 @@ const ProfilePage = () => {
                         <div className="w-24 h-24 rounded-xl overflow-hidden bg-[var(--bg-secondary)] border-2 border-[var(--border-color)]">
                             {profile?.logo ? (
                                 <img
-                                    src={`${API_URL}${profile.logo}`}
+                                    src={getImageUrl(profile.logo)}
                                     alt={profile.name}
                                     className="w-full h-full object-cover"
                                 />

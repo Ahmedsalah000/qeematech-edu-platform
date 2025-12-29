@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { profileAPI } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
@@ -8,6 +8,12 @@ import Card from '../../components/ui/Card'
 import { User, Phone, GraduationCap, Calendar, Camera } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'
+
+const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+}
 
 const ProfilePage = () => {
     const { user } = useAuth()
@@ -27,16 +33,20 @@ const ProfilePage = () => {
         queryFn: async () => {
             const res = await profileAPI.get()
             return res.data
-        },
-        onSuccess: (data) => {
-            setFormData({
-                name: data?.name || '',
-                phone: data?.phone || '',
-                class: data?.class || '',
-                academicYear: data?.academicYear || '',
-            })
-        },
+        }
     })
+
+    // Sync form data when profile is loaded
+    useEffect(() => {
+        if (profile) {
+            setFormData({
+                name: profile.name || '',
+                phone: profile.phone || '',
+                class: profile.class || '',
+                academicYear: profile.academicYear || '',
+            })
+        }
+    }, [profile])
 
     // Update mutation
     const updateMutation = useMutation({
@@ -81,7 +91,7 @@ const ProfilePage = () => {
                         <div className="w-24 h-24 rounded-full overflow-hidden bg-[var(--bg-secondary)] border-2 border-[var(--border-color)]">
                             {profile?.profileImage ? (
                                 <img
-                                    src={`${API_URL}${profile.profileImage}`}
+                                    src={getImageUrl(profile.profileImage)}
                                     alt={profile.name}
                                     className="w-full h-full object-cover"
                                 />

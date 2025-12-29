@@ -10,6 +10,12 @@ import { BookOpen, Plus, Edit, Trash2, Search, Image } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'
 
+const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+}
+
 const LessonsPage = () => {
     const queryClient = useQueryClient()
     const [searchTerm, setSearchTerm] = useState('')
@@ -161,7 +167,7 @@ const LessonsPage = () => {
                             <div className="relative h-40 -mx-6 -mt-6 mb-4 overflow-hidden bg-[var(--bg-secondary)]">
                                 {lesson.image ? (
                                     <img
-                                        src={`${API_URL}${lesson.image}`}
+                                        src={getImageUrl(lesson.image)}
                                         alt={lesson.name}
                                         className="w-full h-full object-cover"
                                     />

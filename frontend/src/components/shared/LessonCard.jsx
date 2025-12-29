@@ -11,7 +11,7 @@ const LessonCard = ({
     isLoading = false
 }) => {
     const imageUrl = lesson.image
-        ? `${API_URL}${lesson.image}`
+        ? (lesson.image.startsWith('http') ? lesson.image : `${API_URL}${lesson.image}`)
         : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop'
 
     return (
@@ -31,8 +31,8 @@ const LessonCard = ({
                         onClick={() => onToggleFavorite?.(lesson)}
                         disabled={isLoading}
                         className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${lesson.isFavorite
-                                ? 'bg-red-500/80 text-white'
-                                : 'bg-black/30 text-white hover:bg-red-500/80'
+                            ? 'bg-red-500/80 text-white'
+                            : 'bg-black/30 text-white hover:bg-red-500/80'
                             }`}
                     >
                         <Heart size={18} fill={lesson.isFavorite ? 'currentColor' : 'none'} />

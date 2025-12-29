@@ -7,6 +7,14 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import { GraduationCap, School, Mail, Lock, User, Phone, Calendar, BookOpen, ArrowLeft } from 'lucide-react'
 
+const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'
+
+const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path}`;
+}
+
 const AuthPage = () => {
     const navigate = useNavigate()
     const { loginStudent, loginAdmin, registerStudent } = useAuth()
