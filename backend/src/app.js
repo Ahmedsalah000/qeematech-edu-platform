@@ -9,7 +9,6 @@ import studentRoutes from './routes/student.routes.js';
 import lessonRoutes from './routes/lesson.routes.js';
 import favoriteRoutes from './routes/favorite.routes.js';
 import profileRoutes from './routes/profile.routes.js';
-import devRoutes from './routes/dev.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,12 +32,6 @@ app.use('/api/lessons', lessonRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/profile', profileRoutes);
 
-// DEV routes (no auth required - for testing)
-if (process.env.NODE_ENV === 'development') {
-  app.use('/api/dev', devRoutes);
-  console.log('⚠️  DEV routes enabled at /api/dev');
-}
-
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Qeematech API is running' });
@@ -53,9 +46,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
 
 export default app;
