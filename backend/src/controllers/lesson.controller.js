@@ -99,31 +99,55 @@ export const createLesson = async (req, res) => {
 export const updateLesson = async (req, res) => {
     try {
         const { name, description, rating } = req.body;
+        const lessonId = parseInt(req.params.id);
+
+        if (isNaN(lessonId)) {
+            return res.status(400).json({ error: 'Invalid lesson ID' });
+        }
 
         // Check lesson exists and belongs to school
         const existing = await prisma.lesson.findFirst({
-            where: { id: parseInt(req.params.id), schoolId: req.school.id }
+            where: { id: lessonId, schoolId: req.school.id }
         });
 
         if (!existing) {
-            return res.status(404).json({ error: 'Lesson not found' });
+            return res.status(404).json({ error: 'Lesson not found or access denied' });
         }
 
         const updateData = {};
         if (name) updateData.name = name;
         if (description !== undefined) updateData.description = description;
-        if (rating !== undefined) updateData.rating = parseFloat(rating);
-        if (req.file) updateData.image = `/uploads/${req.file.filename}`;
+
+        // Ensure rating is a valid number
+        if (rating !== undefined) {
+            const parsedRating = parseFloat(rating);
+            if (!isNaN(parsedRating)) {
+                updateData.rating = parsedRating;
+            }
+        }
+
+        if (req.file) {
+            updateData.image = `/uploads/${req.file.filename}`;
+        }
 
         const lesson = await prisma.lesson.update({
-            where: { id: parseInt(req.params.id) },
+            where: { id: lessonId },
             data: updateData
         });
 
         res.json(lesson);
     } catch (error) {
-        console.error('Update lesson error:', error);
-        res.status(500).json({ error: 'Failed to update lesson' });
+        console.error('Update lesson error details:', {
+            message: error.message,
+            stack: error.stack,
+            body: req.body,
+            file: req.file?.filename,
+            params: req.params
+        });
+        res.status(500).json({
+            error: 'Failed to update lesson',
+            message: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error'
+        });
     }
 };
 
