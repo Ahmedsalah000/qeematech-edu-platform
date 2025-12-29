@@ -113,13 +113,17 @@ export const changePassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update password and revoke ALL tokens
+        const tokenFilter = req.userType === 'student'
+            ? { studentId: req.userId }
+            : { schoolId: req.userId };
+
         await prisma.$transaction([
             model.update({
                 where: { id: req.userId },
                 data: { password: hashedPassword }
             }),
             prisma.refreshToken.updateMany({
-                where: { userId: req.userId, userType: req.userType },
+                where: tokenFilter,
                 data: { revoked: true }
             })
         ]);

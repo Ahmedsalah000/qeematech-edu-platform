@@ -75,16 +75,17 @@ model Favorite {
 model RefreshToken {
   id            Int      @id @default(autoincrement())
   token         String   @unique @db.VarChar(500)
-  userId        Int
-  userType      String   // 'student' or 'admin'
+  studentId     Int?
+  schoolId      Int?
   expiresAt     DateTime
   revoked       Boolean  @default(false)
   replacedBy    String?  // The new token that replaced this one
   createdAt     DateTime @default(now())
 
   // Relations
-  student       Student? @relation(fields: [userId], references: [id], onDelete: Cascade, map: "student_token")
-  school        School?  @relation(fields: [userId], references: [id], onDelete: Cascade, map: "school_token")
+  student       Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  school        School?  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  @@index([userId, userType])
+  @@index([studentId])
+  @@index([schoolId])
 }

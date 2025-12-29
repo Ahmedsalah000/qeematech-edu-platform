@@ -9,14 +9,13 @@ const storeRefreshToken = async (userId, userType, token) => {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
 
-    return await prisma.refreshToken.create({
-        data: {
-            token,
-            userId,
-            userType,
-            expiresAt
-        }
-    });
+    const data = {
+        token,
+        expiresAt,
+        [userType === 'student' ? 'studentId' : 'schoolId']: userId
+    };
+
+    return await prisma.refreshToken.create({ data });
 };
 
 /**
@@ -133,10 +132,16 @@ export const refresh = async (req, res) => {
         });
 
         if (!tokenDoc || tokenDoc.revoked || new Date() > tokenDoc.expiresAt) {
-            // If reusing a revoked token, this is an attack -> Revoke all tokens for this user
+            // Reuse detection / Invalid token
             if (tokenDoc) {
+                // Revoke all tokens for this user (Family invalidation)
                 await prisma.refreshToken.updateMany({
-                    where: { userId: tokenDoc.userId, userType: tokenDoc.userType },
+                    where: {
+                        OR: [
+                            { studentId: tokenDoc.studentId, studentId: { not: null } },
+                            { schoolId: tokenDoc.schoolId, schoolId: { not: null } }
+                        ]
+                    },
                     data: { revoked: true }
                 });
             }
@@ -151,7 +156,7 @@ export const refresh = async (req, res) => {
         // Generate new pair
         const tokens = generateTokens(decoded.id, decoded.type);
 
-        // Revoke old and store new link (Rotation)
+        // Rotation: Revoke old and link to new
         await prisma.refreshToken.update({
             where: { id: tokenDoc.id },
             data: { revoked: true, replacedBy: tokens.refreshToken }
@@ -190,7 +195,12 @@ export const logout = async (req, res) => {
 export const logoutAll = async (req, res) => {
     try {
         await prisma.refreshToken.updateMany({
-            where: { userId: req.userId, userType: req.userType },
+            where: {
+                OR: [
+                    { studentId: req.userId },
+                    { schoolId: req.userId }
+                ]
+            },
             data: { revoked: true }
         });
         res.clearCookie('token', accessTokenOptions);
@@ -201,7 +211,6 @@ export const logoutAll = async (req, res) => {
     }
 };
 
-// ... existing getMe and getSchools remain same logic, can use req.userId/type
 export const getMe = async (req, res) => {
     try {
         if (req.userType === 'student') {
