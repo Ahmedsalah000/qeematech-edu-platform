@@ -1,0 +1,15 @@
+model School {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String   // Hashed password
+  phone     String?
+  address   String?
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  students Student[]
+  lessons  Lesson[]
+  refreshTokens RefreshToken[]
+}

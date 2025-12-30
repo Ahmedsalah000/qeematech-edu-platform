@@ -1,0 +1,17 @@
+model RefreshToken {
+  id            Int      @id @default(autoincrement())
+  token         String   @unique @db.VarChar(500)
+  studentId     Int?
+  schoolId      Int?
+  expiresAt     DateTime
+  revoked       Boolean  @default(false)
+  replacedBy    String?  // The new token that replaced this one
+  createdAt     DateTime @default(now())
+
+  // Relations
+  student       Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  school        School?  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([schoolId])
+}
