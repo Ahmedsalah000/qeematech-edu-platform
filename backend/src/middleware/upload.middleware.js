@@ -5,9 +5,9 @@ import multer from 'multer';
 // Cloudinary Configuration
 // Note: In production, these should be set in environment variables
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dlxts8tsc',
-    api_key: process.env.CLOUDINARY_API_KEY || '193646232377315',
-    api_secret: process.env.CLOUDINARY_API_SECRET || '2TPe5iCLl5cFdVVJNtQVnDZxu8g'
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ,
+    api_key: process.env.CLOUDINARY_API_KEY ,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 // Configure Storage
