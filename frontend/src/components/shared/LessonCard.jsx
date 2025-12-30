@@ -11,7 +11,7 @@ const LessonCard = ({
     isLoading = false
 }) => {
     const imageUrl = lesson.image
-        ? (lesson.image.startsWith('http') ? lesson.image : `${API_URL}${lesson.image}`)
+        ? (String(lesson.image).includes('http') ? lesson.image : `${API_URL}${lesson.image.startsWith('/') ? lesson.image : '/' + lesson.image}`)
         : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop'
 
     return (

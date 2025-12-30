@@ -10,8 +10,9 @@ const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://loc
 
 const getImageUrl = (path) => {
     if (!path) return null;
-    if (path.startsWith('http')) return path;
-    return `${API_URL}${path}`;
+    const sPath = String(path).trim();
+    if (sPath.includes('http://') || sPath.includes('https://')) return sPath;
+    return `${API_URL}${sPath.startsWith('/') ? sPath : '/' + sPath}`;
 }
 
 const ProfilePage = () => {

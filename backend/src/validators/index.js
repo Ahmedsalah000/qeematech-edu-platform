@@ -115,7 +115,8 @@ export const createStudentSchema = Joi.object({
 export const updateStudentSchema = Joi.object({
     name: Joi.string()
         .min(2)
-        .max(100),
+        .max(100)
+        .allow('', null),
 
     phone: Joi.string()
         .pattern(/^[\d\s\+\-\(\)]+$/)
@@ -175,7 +176,8 @@ export const updateLessonSchema = Joi.object({
 export const updateStudentProfileSchema = Joi.object({
     name: Joi.string()
         .min(2)
-        .max(100),
+        .max(100)
+        .allow('', null),
 
     phone: Joi.string()
         .pattern(/^[\d\s\+\-\(\)]+$/)
@@ -193,7 +195,8 @@ export const updateStudentProfileSchema = Joi.object({
 export const updateSchoolProfileSchema = Joi.object({
     name: Joi.string()
         .min(2)
-        .max(200),
+        .max(200)
+        .allow('', null),
 
     phone: Joi.string()
         .pattern(/^[\d\s\+\-\(\)]+$/)
